@@ -19,6 +19,12 @@ FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./CardShop.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
+# Install dotnet-ef tool
+RUN dotnet tool install --global dotnet-ef
+
+# Set the PATH environment variable to include the .dotnet/tools directory
+ENV PATH="${PATH}:/root/.dotnet/tools"
+
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
