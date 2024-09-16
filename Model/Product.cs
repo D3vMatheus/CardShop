@@ -10,5 +10,7 @@
         public float storage {get; set; }
         public DateTime CreatedAt { get; set; }
 
+        public int CategoryId { get; set; }
+        public Category? Category { get; set; }
     }
 }
