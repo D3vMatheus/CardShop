@@ -14,6 +14,17 @@ namespace CardShop.Controllers
         public CategoryController(CardShopDbContext context) {
             _context = context;
         }
+
+        [HttpGet("CategoryProducts")]
+        public ActionResult<IEnumerable<Category>> GetProductsInCategory()
+        {
+            var category = _context.categories.Include(p=> p.Products).ToList();
+            if (category is null)
+                return NotFound();
+
+            return category;
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<Category>> GetCategory()
         {
