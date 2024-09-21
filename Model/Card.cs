@@ -7,20 +7,20 @@ namespace CardShop.Model
     {
         public int CardId { get; set; }
 
-        //[Required]
+        [Required]
         [RegularExpression(@"^[A-Z]{2}\d{1,2}-\d{3}$")]
         public string? CardNumber { get; set; }
         
-        //[Required]
+        [Required]
         public Extra extra { get; set; }
         
-        //[Required]
+        [Required]
         public Language Language { get; set; }
         
-        //[Required]
+        [Required]
         public Quality Quality { get; set; }
 
-        //[Required]
+        [Required]
         public Rarity Rarity { get; set; }
 
     }

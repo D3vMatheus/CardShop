@@ -31,9 +31,11 @@ namespace CardShop.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CategoryId"));
 
                     b.Property<string>("ImageUrl")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("CategoryId");
@@ -56,6 +58,7 @@ namespace CardShop.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Discriminator")
@@ -64,9 +67,11 @@ namespace CardShop.Migrations
                         .HasColumnType("character varying(8)");
 
                     b.Property<string>("ImageUrl")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<decimal>("Price")
@@ -94,6 +99,7 @@ namespace CardShop.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("CardNumber")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("Language")

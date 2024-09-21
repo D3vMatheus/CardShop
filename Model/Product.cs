@@ -8,27 +8,27 @@ namespace CardShop.Model
     {
         public int ProductId { get; set; }
 
-        //[Required]
+        [Required]
         [DisplayName("Product Name")]
         public string? Name { get; set; }
 
-        //[Required]
+        [Required]
         public string? Description { get; set; }
 
-        //[Required]
+        [Required]
         [RegularExpression(@"^\$?\d+(\.(\d{2}))?$")]
         public decimal Price { get; set; }
         
-        //[Required]
+        [Required]
         public string? ImageUrl { get; set; }
 
-        //[Required]
+        [Required]
         public float storage {get; set; }
         
-        //[Required]
+        [Required]
         public DateTime CreatedAt { get; set; }
 
-        //[Required]
+        [Required]
         public int CategoryId { get; set; }
         
         [JsonIgnore]

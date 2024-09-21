@@ -13,11 +13,11 @@ namespace CardShop.Model
         
         public int CategoryId { get; set; }
         
-        //[Required]
+        [Required]
         [DisplayName("Category Name")]
         public string? Name { get; set; }
         
-        //[Required]
+        [Required]
         public string? ImageUrl { get; set; }
 
         public ICollection<Product>? Products { get; set; }
