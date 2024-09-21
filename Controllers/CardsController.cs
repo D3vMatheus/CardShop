@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CardShop.Context;
 using CardShop.Model;
+using System.ComponentModel.DataAnnotations;
 
 namespace CardShop.Controllers
 {
@@ -25,7 +26,7 @@ namespace CardShop.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Card>>> Getcards()
         {
-            return await _context.cards.ToListAsync();
+            return await _context.cards.AsNoTracking().Take(10).ToListAsync();
         }
 
         // GET: api/Cards/5
@@ -33,6 +34,19 @@ namespace CardShop.Controllers
         public async Task<ActionResult<Card>> GetCard(int id)
         {
             var card = await _context.cards.FindAsync(id);
+
+            if (card == null)
+            {
+                return NotFound();
+            }
+
+            return card;
+        }
+
+        [HttpGet("{number:regex(^[[A-Z]]{{2}}\\d{{1,2}}-\\d{{3}}$)}")]
+        public async Task<ActionResult<IEnumerable<Card>>> GetCardByNumber(string number)
+        {
+            var card = await _context.cards.Where(n => n.CardNumber == number).ToListAsync();
 
             if (card == null)
             {

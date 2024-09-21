@@ -16,7 +16,7 @@ namespace CardShop.Controllers
         }
 
         [HttpGet("CategoryProducts")]
-        public ActionResult<IEnumerable<Category>> GetProductsInCategory()
+        public  ActionResult<IEnumerable<Category>> GetProductsInCategory()
         {
             var category = _context.categories.Include(p=> p.Products).ToList();
             if (category is null)
