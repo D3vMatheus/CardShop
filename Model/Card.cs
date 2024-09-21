@@ -8,7 +8,7 @@ namespace CardShop.Model
         public int CardId { get; set; }
 
         [Required]
-        [RegularExpression(@"^[A-Z]{2}\d{1,2}-\d{3}$")]
+        [RegularExpression(@"^[A-Z]{2}\d{1,2}-\d{3}$"]
         public string? CardNumber { get; set; }
         
         [Required]

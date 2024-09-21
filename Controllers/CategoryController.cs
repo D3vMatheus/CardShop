@@ -16,68 +16,68 @@ namespace CardShop.Controllers
         }
 
         [HttpGet("CategoryProducts")]
-        public  ActionResult<IEnumerable<Category>> GetProductsInCategory()
+        public  async Task<ActionResult<IEnumerable<Category>>> GetProductsInCategoryAsync()
         {
-            var category = _context.categories.Include(p=> p.Products).ToList();
+            var category = await _context.categories.Include(p=> p.Products).ToListAsync();
             if (category is null)
                 return NotFound();
 
-            return category;
+            return Ok(category);
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Category>> GetCategory()
+        public async Task<ActionResult<IEnumerable<Category>>> GetCategoryAsync()
         {
-            var category = _context.categories.ToList();
+            var category = await _context.categories.ToListAsync();
             if (category is null) 
                 return NotFound();
 
-            return category;
+            return Ok(category);
         }
 
         [HttpGet("{id}", Name = "GetCategoryById")]
-        public ActionResult<Category> GetCategoryById(int id) 
+        public async Task<ActionResult<Category>> GetCategoryByIdAsync(int id) 
         {
-            var category = _context.categories.FirstOrDefault(c => c.CategoryId == id);
+            var category = await _context.categories.FirstOrDefaultAsync(c => c.CategoryId == id);
             if (category is null)
                 return NotFound();
 
-            return category;
+            return Ok(category);
         }
 
         [HttpPost]
-        public ActionResult AddCategory(Category category) {
+        public async Task<ActionResult> AddCategoryAsync(Category category) {
             if (category is null)
                 return NotFound();
 
-            _context.categories.Add(category);
-            _context.SaveChanges();
+            await _context.categories.AddAsync(category);
+            await _context.SaveChangesAsync();
 
             return new CreatedAtRouteResult("GetCategoryById", new { id = category.CategoryId }, category);
         }
 
         [HttpPut("{id}")]
-        public ActionResult DeleteCategory(int id, Category category)
+        public async Task<ActionResult> DeleteCategoryAsync(int id, Category category)
         {
             //var category = _context.categories.FirstOrDefault(c => c.CategoryId == id);
             if (id != category.CategoryId)
                 return BadRequest();
 
             _context.Entry(category).State = EntityState.Modified;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok(category);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult DeleteCategory(int id)
+        public async Task<ActionResult> DeleteCategory(int id)
         {
             var category = _context.categories.FirstOrDefault(c => c.CategoryId == id);
             if (category is null)
                 return NotFound();
 
             _context.categories.Remove(category);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok();
         }

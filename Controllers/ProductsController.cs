@@ -18,34 +18,34 @@ namespace CardShop.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Product>> GetProducts()
+        public async Task<ActionResult<IEnumerable<Product>>> GetProductsAsync()
         {
-            var product = _context.products.ToList();
+            var product = await _context.products.AsNoTracking().Take(10).ToListAsync();
 
             if(product is null)
                 return NotFound();
 
-            return product;
+            return Ok(product);
         }
         [HttpGet("{id}", Name = "GetProductById")]
-        public ActionResult<Product> GetProductById(int id)
+        public async Task<ActionResult<Product>> GetProductByIdAsync(int id)
         {
-            var product = _context.products.FirstOrDefault(p => p.ProductId == id);
+            var product = await _context.products.FirstOrDefaultAsync(p => p.ProductId == id);
             
             if(product is null)
                 return NotFound();
 
-            return product;
+            return Ok(product);
         }
 
         [HttpPost]
-        public ActionResult AddProduct(Product product)
+        public async Task<ActionResult> AddProductAsync(Product product)
         {
             if(product is null) 
                 return BadRequest();
 
-            _context.products.Add(product);
-            _context.SaveChanges();
+            await _context.products.AddAsync(product);
+            await _context.SaveChangesAsync();
 
             return new CreatedAtRouteResult("GetProductById", new { id = product.ProductId }, product);
         }
@@ -53,27 +53,27 @@ namespace CardShop.Controllers
         //This approach only allow full update products
         //It's possible bypass this approach using PATCH or a different PUT implementation
         [HttpPut("{id}")]
-        public ActionResult UpdateProduct(int id, Product product)
+        public async Task<ActionResult> UpdateProductAsync(int id, Product product)
         {
             if(id != product.ProductId)
                 return BadRequest();
 
             _context.Entry(product).State = EntityState.Modified;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok(product);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult DeleteProduct(int id)
+        public async Task<ActionResult> DeleteProductAsync(int id)
         {
-            var product = _context.products.FirstOrDefault(p => p.ProductId == id);
+            var product = await _context.products.FirstOrDefaultAsync(p => p.ProductId == id);
 
             if (product is null)
                 return NotFound();
 
             _context.products.Remove(product);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok();
         }
