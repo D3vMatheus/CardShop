@@ -16,7 +16,7 @@ namespace CardShop.Model
         public string? Description { get; set; }
 
         [Required]
-        [RegularExpression(@"^\$?\d+(\.(\d{2}))?$")]
+        [RegularExpression(@"^\$?\d+(\.(\d{2}))?$", ErrorMessage="Price value must have 2 digits after '.'")]
         public decimal Price { get; set; }
         
         [Required]

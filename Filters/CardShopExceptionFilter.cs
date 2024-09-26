@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CardShop.Filters
 {
-    public class CardShopLoggingFilter : IExceptionFilter
+    public class CardShopExceptionFilter : IExceptionFilter
     {
-        private readonly ILogger<CardShopLoggingFilter> _logger;
+        private readonly ILogger<CardShopExceptionFilter> _logger;
 
-        public CardShopLoggingFilter(ILogger<CardShopLoggingFilter> logger)
+        public CardShopExceptionFilter(ILogger<CardShopExceptionFilter> logger)
         {
             _logger = logger;
         }
