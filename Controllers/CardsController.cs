@@ -45,7 +45,7 @@ namespace CardShop.Controllers
             if (card == null)
             {
                 _logger.LogWarning("Card doesn't exist");
-                return NotFound();
+                return NotFound("Card not found");
             }
 
             return card;
@@ -58,8 +58,8 @@ namespace CardShop.Controllers
 
             if (!CardNumberExists(number))
             {
-                _logger.LogWarning("Card number doesn't exist");
-                return NotFound();
+                _logger.LogWarning($"Card number {number} doesn't exist");
+                return NotFound($"Card number {number} not found, need meet the following conditions XX0-000 or YY11-111");
             }
 
             return card;
@@ -73,7 +73,7 @@ namespace CardShop.Controllers
             if (id != card.ProductId)
             {
                 _logger.LogWarning($"Couldn't update card due invalid information detected");
-                return BadRequest();
+                return BadRequest("Invalid information detected");
             }
 
             _context.Entry(card).State = EntityState.Modified;
@@ -106,7 +106,7 @@ namespace CardShop.Controllers
             if (card is null) 
             {
                 _logger.LogWarning($"Couldn't add card due invalid information detected");
-                return BadRequest();
+                return BadRequest("Invalid information detected");
             }
 
             _context.cards.Add(card);
@@ -123,7 +123,7 @@ namespace CardShop.Controllers
             if (card == null)
             {
                 _logger.LogWarning($"Couldn't delete card due invalid information detected: {id} doesn't exist");
-                return NotFound();
+                return NotFound("Card not found");
             }
 
             _context.cards.Remove(card);

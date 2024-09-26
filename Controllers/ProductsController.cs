@@ -27,7 +27,7 @@ namespace CardShop.Controllers
             if(product is null)
             {
                 _logger.LogWarning("Products doesn't exist");
-                return NotFound();
+                return NotFound("Product not found");
             }
 
             return product;
@@ -41,7 +41,7 @@ namespace CardShop.Controllers
             if(product is null)
             {
                 _logger.LogWarning($"Product {id} doesn't exist");
-                return NotFound();
+                return NotFound("Product not found");
             }
 
             return product;
@@ -53,7 +53,7 @@ namespace CardShop.Controllers
             if(product is null)
             {
                 _logger.LogWarning($"Couldn't add product due invalid information detected");
-                return BadRequest();
+                return BadRequest("Invalid information detected");
             }
 
             await _context.products.AddAsync(product);
@@ -70,7 +70,7 @@ namespace CardShop.Controllers
             if(id != product.ProductId)
             {
                 _logger.LogWarning($"Couldn't update product due invalid information detected: {id} doesn't exist");
-                return BadRequest();
+                return BadRequest("Invalid information detected");
             }
 
             _context.Entry(product).State = EntityState.Modified;
@@ -87,7 +87,7 @@ namespace CardShop.Controllers
             if (product is null)
             {
                 _logger.LogWarning($"Couldn't delete product due invalid information detected: {id} doesn't exist");
-                return NotFound();
+                return NotFound("Product not found");
             }
 
             _context.products.Remove(product);

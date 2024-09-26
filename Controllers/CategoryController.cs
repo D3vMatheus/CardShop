@@ -26,7 +26,7 @@ namespace CardShop.Controllers
             if (category is null)
             {
                 _logger.LogWarning($"Category doesn't exist");
-                return NotFound();
+                return NotFound("Category not found");
             }
 
             return category;
@@ -39,7 +39,7 @@ namespace CardShop.Controllers
             if (category is null)
             {
                 _logger.LogWarning("Category doesn't exist");
-                return NotFound();
+                return NotFound("Category not found");
             }
 
             return category;
@@ -52,7 +52,7 @@ namespace CardShop.Controllers
             if (category is null)
             {
                 _logger.LogWarning($"Category {id} doesn't exist");
-                return NotFound();
+                return NotFound("Category not found");
             }
 
             return category;
@@ -63,7 +63,7 @@ namespace CardShop.Controllers
             if (category is null)
             {
                 _logger.LogWarning($"Couldn't add category due invalid information detected");
-                return BadRequest();
+                return BadRequest("Invalid information detected");
             }
 
             await _context.categories.AddAsync(category);
@@ -79,7 +79,7 @@ namespace CardShop.Controllers
             if (id != category.CategoryId)
             {
                 _logger.LogWarning($"Couldn't update category due invalid information detected: {id} doesn't exist");
-                return NotFound();
+                return NotFound("Category not found");
             }
 
             _context.Entry(category).State = EntityState.Modified;
@@ -95,7 +95,7 @@ namespace CardShop.Controllers
             if (category is null)
             {
                 _logger.LogWarning($"Couldn't delete category due invalid information detected: {id} doesn't exist");
-                return NotFound();
+                return NotFound("Category not found");
             }
 
             _context.categories.Remove(category);
