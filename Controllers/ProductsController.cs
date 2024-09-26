@@ -27,6 +27,7 @@ namespace CardShop.Controllers
 
             return Ok(product);
         }
+
         [HttpGet("{id}", Name = "GetProductById")]
         public async Task<ActionResult<Product>> GetProductByIdAsync(int id)
         {
