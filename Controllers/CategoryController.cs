@@ -1,4 +1,5 @@
 ﻿using CardShop.Context;
+using CardShop.Filters;
 using CardShop.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,8 +12,11 @@ namespace CardShop.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly CardShopDbContext _context;
-        public CategoryController(CardShopDbContext context) {
+        private readonly ILogger<CategoryController> _logger;
+
+        public CategoryController(CardShopDbContext context, ILogger<CategoryController> logger) {
             _context = context;
+            _logger = logger;
         }
 
         [HttpGet("CategoryProducts")]
@@ -20,19 +24,25 @@ namespace CardShop.Controllers
         {
             var category = await _context.categories.Include(p=> p.Products).ToListAsync();
             if (category is null)
-                return NotFound();
+            {
+                _logger.LogWarning($"Category doesn't exist");
+                return NotFound("Category not found");
+            }
 
-            return Ok(category);
+            return category;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategoryAsync()
         {
             var category = await _context.categories.ToListAsync();
-            if (category is null) 
-                return NotFound();
+            if (category is null)
+            {
+                _logger.LogWarning("Category doesn't exist");
+                return NotFound("Category not found");
+            }
 
-            return Ok(category);
+            return category;
         }
 
         [HttpGet("{id}", Name = "GetCategoryById")]
@@ -40,15 +50,21 @@ namespace CardShop.Controllers
         {
             var category = await _context.categories.FirstOrDefaultAsync(c => c.CategoryId == id);
             if (category is null)
-                return NotFound();
+            {
+                _logger.LogWarning($"Category {id} doesn't exist");
+                return NotFound("Category not found");
+            }
 
-            return Ok(category);
+            return category;
         }
 
         [HttpPost]
         public async Task<ActionResult> AddCategoryAsync(Category category) {
             if (category is null)
-                return NotFound();
+            {
+                _logger.LogWarning($"Couldn't add category due invalid information detected");
+                return BadRequest("Invalid information detected");
+            }
 
             await _context.categories.AddAsync(category);
             await _context.SaveChangesAsync();
@@ -57,16 +73,19 @@ namespace CardShop.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> DeleteCategoryAsync(int id, Category category)
+        public async Task<ActionResult> UpdateCategoryAsync(int id, Category category)
         {
             //var category = _context.categories.FirstOrDefault(c => c.CategoryId == id);
             if (id != category.CategoryId)
-                return BadRequest();
+            {
+                _logger.LogWarning($"Couldn't update category due invalid information detected: {id} doesn't exist");
+                return NotFound("Category not found");
+            }
 
             _context.Entry(category).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            return Ok(category);
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
@@ -74,12 +93,15 @@ namespace CardShop.Controllers
         {
             var category = _context.categories.FirstOrDefault(c => c.CategoryId == id);
             if (category is null)
-                return NotFound();
+            {
+                _logger.LogWarning($"Couldn't delete category due invalid information detected: {id} doesn't exist");
+                return NotFound("Category not found");
+            }
 
             _context.categories.Remove(category);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return NoContent();
         }
     }
 }

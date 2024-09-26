@@ -8,7 +8,7 @@ namespace CardShop.Model
         public int CardId { get; set; }
 
         [Required]
-        [RegularExpression(@"^[A-Z]{2}\d{1,2}-\d{3}$"]
+        [RegularExpression(@"^[A-Z]{2}\d{1,2}-\d{3}$", ErrorMessage ="Card number must be XX0-000 or YY11-111")]
         public string? CardNumber { get; set; }
         
         [Required]

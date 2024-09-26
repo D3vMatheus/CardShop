@@ -16,41 +16,50 @@ namespace CardShop.Controllers
     public class CardsController : ControllerBase
     {
         private readonly CardShopDbContext _context;
+        private readonly ILogger<CardsController> _logger;
 
-        public CardsController(CardShopDbContext context)
+        public CardsController(CardShopDbContext context, ILogger<CardsController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/Cards
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Card>>> Getcards()
+        public async Task<ActionResult<IEnumerable<Card>>> GetcardsAsync()
         {
-            return await _context.cards.AsNoTracking().Take(10).ToListAsync();
+            var cards = await _context.cards.AsNoTracking().Take(10).ToListAsync();
+            if(cards is null){
+                _logger.LogWarning("Cards doesn't exist");
+                return NotFound("Card not found");
+            }
+            return cards;
         }
 
         // GET: api/Cards/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Card>> GetCard(int id)
+        public async Task<ActionResult<Card>> GetCardByIdAsync(int id)
         {
             var card = await _context.cards.FindAsync(id);
 
             if (card == null)
             {
-                return NotFound();
+                _logger.LogWarning("Card doesn't exist");
+                return NotFound("Card not found");
             }
 
             return card;
         }
 
         [HttpGet("{number:regex(^[[A-Z]]{{2}}\\d{{1,2}}-\\d{{3}}$)}")]
-        public async Task<ActionResult<IEnumerable<Card>>> GetCardByNumber(string number)
+        public async Task<ActionResult<IEnumerable<Card>>> GetCardByNumberAsync(string number)
         {
             var card = await _context.cards.Where(n => n.CardNumber == number).ToListAsync();
 
-            if (card == null)
+            if (!CardNumberExists(number))
             {
-                return NotFound();
+                _logger.LogWarning($"Card number {number} doesn't exist");
+                return NotFound($"Card number {number} not found, need meet the following conditions XX0-000 or YY11-111");
             }
 
             return card;
@@ -59,11 +68,12 @@ namespace CardShop.Controllers
         // PUT: api/Cards/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCard(int id, Card card)
+        public async Task<IActionResult> UpdateCardAsync(int id, Card card)
         {
             if (id != card.ProductId)
             {
-                return BadRequest();
+                _logger.LogWarning($"Couldn't update card due invalid information detected");
+                return BadRequest("Invalid information detected");
             }
 
             _context.Entry(card).State = EntityState.Modified;
@@ -76,7 +86,8 @@ namespace CardShop.Controllers
             {
                 if (!CardExists(id))
                 {
-                    return NotFound();
+                    _logger.LogWarning($"Couldn't update card due invalid information detected: {id} doesn't exist");
+                    return NotFound("Card not found");
                 }
                 else
                 {
@@ -90,8 +101,14 @@ namespace CardShop.Controllers
         // POST: api/Cards
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Card>> PostCard(Card card)
+        public async Task<ActionResult<Card>> AddCardAsync(Card card)
         {
+            if (card is null) 
+            {
+                _logger.LogWarning($"Couldn't add card due invalid information detected");
+                return BadRequest("Invalid information detected");
+            }
+
             _context.cards.Add(card);
             await _context.SaveChangesAsync();
 
@@ -100,12 +117,13 @@ namespace CardShop.Controllers
 
         // DELETE: api/Cards/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCard(int id)
+        public async Task<IActionResult> DeleteCardAsync(int id)
         {
             var card = await _context.cards.FindAsync(id);
             if (card == null)
             {
-                return NotFound();
+                _logger.LogWarning($"Couldn't delete card due invalid information detected: {id} doesn't exist");
+                return NotFound("Card not found");
             }
 
             _context.cards.Remove(card);
@@ -117,6 +135,11 @@ namespace CardShop.Controllers
         private bool CardExists(int id)
         {
             return _context.cards.Any(e => e.ProductId == id);
+        }
+
+        private bool CardNumberExists(string number)
+        {
+            return _context.cards.Any(n => n.CardNumber== number);
         }
     }
 }
