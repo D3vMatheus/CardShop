@@ -23,7 +23,8 @@ namespace CardShop.Model
         public string? ImageUrl { get; set; }
 
         [Required]
-        public float storage {get; set; }
+        [Range(1, float.MaxValue)]
+        public float Storage {get; set; }
         
         [Required]
         public DateTime CreatedAt { get; set; }
