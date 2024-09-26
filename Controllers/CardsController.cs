@@ -31,7 +31,7 @@ namespace CardShop.Controllers
             var cards = await _context.cards.AsNoTracking().Take(10).ToListAsync();
             if(cards is null){
                 _logger.LogWarning("Cards doesn't exist");
-                return NotFound();
+                return NotFound("Card not found");
             }
             return cards;
         }
@@ -87,7 +87,7 @@ namespace CardShop.Controllers
                 if (!CardExists(id))
                 {
                     _logger.LogWarning($"Couldn't update card due invalid information detected: {id} doesn't exist");
-                    return NotFound();
+                    return NotFound("Card not found");
                 }
                 else
                 {
