@@ -30,7 +30,7 @@ namespace CardShop.Repository.Services
 
         public async Task<Card> GetCardByIdAsync(int id)
         {
-            var card = await _context.cards.FindAsync(id);
+            var card = await _context.cards.FirstOrDefaultAsync(c => c.CategoryId == id);
 
             if (card is null)
                 throw new ArgumentNullException(nameof(card));

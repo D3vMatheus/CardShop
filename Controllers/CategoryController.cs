@@ -2,6 +2,8 @@
 using CardShop.Filters;
 using CardShop.Model;
 using CardShop.Repository;
+using CardShop.Repository.Interfaces;
+using CardShop.Repository.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,79 +14,79 @@ namespace CardShop.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private readonly CardShopDbContext _context;
+        private readonly ICategoryRepository _repository;
         private readonly ILogger<CategoryController> _logger;
 
-        public CategoryController(CardShopDbContext context, ILogger<CategoryController> logger) {
-            _context = context;
+        public CategoryController(ICategoryRepository repository, ILogger<CategoryController> logger) {
+            _repository = repository;
             _logger = logger;
         }
 
         [HttpGet("CategoryProducts")]
-        public  async Task<ActionResult<IEnumerable<Category>>> GetProductsInCategoryAsync()
+        public  async Task<ActionResult<IEnumerable<Category>>> GetProductsInCategory()
         {
-            var category = await _context.categories.Include(p=> p.Products).ToListAsync();
+            var category = await _repository.GetProductsInCategoryAsync();
+
             if (category is null)
             {
                 _logger.LogWarning($"Category doesn't exist");
                 return NotFound("Category not found");
             }
 
-            return category;
+            return Ok(category);
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategoryAsync()
+        public async Task<ActionResult<IEnumerable<Category>>> GetCategory()
         {
-            var category = await _context.categories.ToListAsync();
-            if (category is null)
+            var categories = await _repository.GetCategoriesAsync();
+
+            if (categories is null)
             {
                 _logger.LogWarning("Category doesn't exist");
                 return NotFound("Category not found");
             }
 
-            return category;
+            return Ok(categories);
         }
 
         [HttpGet("{id}", Name = "GetCategoryById")]
-        public async Task<ActionResult<Category>> GetCategoryByIdAsync(int id) 
+        public async Task<ActionResult<Category>> GetCategoryById(int id) 
         {
-            var category = await _context.categories.FirstOrDefaultAsync(c => c.CategoryId == id);
+            var category = await _repository.GetCategoryByIdAsync(id);
             if (category is null)
             {
                 _logger.LogWarning($"Category {id} doesn't exist");
                 return NotFound("Category not found");
             }
 
-            return category;
+            return Ok(category);
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddCategoryAsync(Category category) {
+        public async Task<ActionResult> AddCategory(Category category) {
+            
             if (category is null)
             {
                 _logger.LogWarning($"Couldn't add category due invalid information detected");
                 return BadRequest("Invalid information detected");
             }
 
-            await _context.categories.AddAsync(category);
-            await _context.SaveChangesAsync();
+            var newCategory = await _repository.CreateAsync(category);
 
-            return new CreatedAtRouteResult("GetCategoryById", new { id = category.CategoryId }, category);
+            return new CreatedAtRouteResult("GetCategoryById", new { id = newCategory.CategoryId}, newCategory);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateCategoryAsync(int id, Category category)
+        public async Task<ActionResult> UpdateCategory(int id, Category category)
         {
-            //var category = _context.categories.FirstOrDefault(c => c.CategoryId == id);
             if (id != category.CategoryId)
             {
                 _logger.LogWarning($"Couldn't update category due invalid information detected: {id} doesn't exist");
                 return NotFound("Category not found");
             }
 
-            _context.Entry(category).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            await _repository.UpdateAsync(category);
 
             return NoContent();
         }
@@ -92,16 +94,14 @@ namespace CardShop.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteCategory(int id)
         {
-            var category = _context.categories.FirstOrDefault(c => c.CategoryId == id);
+            var category = _repository.GetCategoryByIdAsync(id);
             if (category is null)
             {
                 _logger.LogWarning($"Couldn't delete category due invalid information detected: {id} doesn't exist");
                 return NotFound("Category not found");
             }
 
-            _context.categories.Remove(category);
-            await _context.SaveChangesAsync();
-
+            await _repository.DeleteAsync(id);
             return NoContent();
         }
     }

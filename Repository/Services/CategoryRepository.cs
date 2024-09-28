@@ -20,11 +20,11 @@ namespace CardShop.Repository.Services
 
         }
 
-        public async Task<Category> GetCategoryAsync(int id)
+        public async Task<Category> GetCategoryByIdAsync(int id)
         {
-            var category = await _context.categories.FindAsync(id);
+            var category = await _context.categories.FirstOrDefaultAsync(c => c.CategoryId == id);
 
-            if(category is null)
+            if (category is null)
                 throw new ArgumentNullException(nameof(category));
 
             return category;
@@ -33,6 +33,7 @@ namespace CardShop.Repository.Services
         public async Task<IEnumerable<Category>> GetProductsInCategoryAsync()
         {
             var category = await _context.categories.Include(p => p.Products).ToListAsync();
+
             if (category is null)
                 throw new ArgumentNullException(nameof(category));
 

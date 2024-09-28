@@ -1,6 +1,8 @@
 using CardShop.Context;
 using CardShop.Extensions;
 using CardShop.Filters;
+using CardShop.Repository.Interfaces;
+using CardShop.Repository.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +28,8 @@ builder.Services.AddDbContext<CardShopDbContext>(
        options => options.UseNpgsql(builder.Configuration.GetConnectionString("Database"))
 );
 
+//builder.Services.AddScoped<CardShopExceptionFilter>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 
 var app = builder.Build();
