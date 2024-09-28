@@ -1,6 +1,7 @@
 ﻿using CardShop.Context;
 using CardShop.Filters;
 using CardShop.Model;
+using CardShop.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
