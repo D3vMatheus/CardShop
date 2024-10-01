@@ -8,12 +8,12 @@ namespace CardShop.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductController : ControllerBase
     {
         private readonly CardShopDbContext _context;
-        private readonly ILogger<ProductsController> _logger;
+        private readonly ILogger<ProductController> _logger;
 
-        public ProductsController(CardShopDbContext context, ILogger<ProductsController> logger)
+        public ProductController(CardShopDbContext context, ILogger<ProductController> logger)
         {
             _context = context;
             _logger = logger;

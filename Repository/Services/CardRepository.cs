@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CardShop.Repository.Services
 {
-    public class CardRepository : ICardsRepository
+    public class CardRepository : ICardRepository
     {
         private readonly CardShopDbContext _context;
         

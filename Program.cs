@@ -30,6 +30,7 @@ builder.Services.AddDbContext<CardShopDbContext>(
 
 //builder.Services.AddScoped<CardShopExceptionFilter>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 
 var app = builder.Build();
