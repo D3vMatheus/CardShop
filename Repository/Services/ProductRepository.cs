@@ -20,7 +20,7 @@ namespace CardShop.Repository.Services
 
         public async Task<Product> GetProductByIdAsync(int id)
         {
-            var product = await _context.products.FirstOrDefaultAsync(c => c.CategoryId == id);
+            var product = await _context.products.FirstOrDefaultAsync(c => c.ProductId == id);
 
             if (product is null)
                 throw new ArgumentNullException(nameof(product));
@@ -33,7 +33,7 @@ namespace CardShop.Repository.Services
             if (product is null) 
                 throw new ArgumentNullException(nameof(product));
 
-            await _context.AddAsync(product);
+            await _context.products.AddAsync(product);
             await _context.SaveChangesAsync();
 
             return product;
