@@ -77,7 +77,7 @@ namespace CardShop.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
 
-                    b.Property<float>("storage")
+                    b.Property<float>("Storage")
                         .HasColumnType("real");
 
                     b.HasKey("ProductId");

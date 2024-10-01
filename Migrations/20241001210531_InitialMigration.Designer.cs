@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CardShop.Migrations
 {
     [DbContext(typeof(CardShopDbContext))]
-    [Migration("20240921005652_InitialMigration")]
+    [Migration("20241001210531_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -80,7 +80,7 @@ namespace CardShop.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
 
-                    b.Property<float>("storage")
+                    b.Property<float>("Storage")
                         .HasColumnType("real");
 
                     b.HasKey("ProductId");

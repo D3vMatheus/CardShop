@@ -24,7 +24,7 @@ namespace CardShop.Model
 
         [Required]
         [Range(1, float.MaxValue)]
-        public float Storage {get; set; }
+        public float storage {get; set; }
         
         [Required]
         public DateTime CreatedAt { get; set; }
