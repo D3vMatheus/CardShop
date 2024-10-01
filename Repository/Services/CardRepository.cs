@@ -13,14 +13,24 @@ namespace CardShop.Repository.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<Card>> GetCardAsync()
+        public async Task<IEnumerable<Card>> GetAsync()
         {
             return await _context.cards.Take(10).ToListAsync();
         }
 
-        public async Task<Card> GetCardByCardNumberAsync(string cardNumber)
+        public async Task<IEnumerable<Card>> GetByCardNumberAsync(string cardNumber)
         {
-            var card = await _context.cards.FirstOrDefaultAsync(c => c.CardNumber == cardNumber);
+            var card = await _context.cards.Where(c => c.CardNumber == cardNumber).ToListAsync();
+
+            if (!CardNumberExists(cardNumber))
+                throw new ArgumentNullException(nameof(card));
+
+            return card;
+        }
+
+        public async Task<Card> GetByIdAsync(int id)
+        {
+            var card = await _context.cards.FirstOrDefaultAsync(c => c.ProductId == id);
 
             if (card is null)
                 throw new ArgumentNullException(nameof(card));
@@ -28,17 +38,7 @@ namespace CardShop.Repository.Services
             return card;
         }
 
-        public async Task<Card> GetCardByIdAsync(int id)
-        {
-            var card = await _context.cards.FirstOrDefaultAsync(c => c.CategoryId == id);
-
-            if (card is null)
-                throw new ArgumentNullException(nameof(card));
-
-            return card;
-        }
-
-        public async Task<Card> CreateCardAsync(Card card)
+        public async Task<Card> CreateAsync(Card card)
         {
             if (card is null)
                 throw new ArgumentNullException(nameof(card));
@@ -49,7 +49,7 @@ namespace CardShop.Repository.Services
             return card;
         }
 
-        public async Task<Card> UpdateCardAsync(Card card)
+        public async Task<Card> UpdateAsync(Card card)
         {
             if (card is null)
                 throw new ArgumentNullException(nameof(card));
@@ -58,6 +58,11 @@ namespace CardShop.Repository.Services
             await _context.SaveChangesAsync();
 
             return card;
+        }
+
+        private bool CardNumberExists(string number)
+        {
+            return _context.cards.Any(n => n.CardNumber == number);
         }
     }
 }

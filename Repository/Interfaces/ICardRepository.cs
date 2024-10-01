@@ -4,10 +4,10 @@ namespace CardShop.Repository.Interfaces
 {
     public interface ICardRepository
     {
-        Task<IEnumerable<Card>> GetCardAsync();
-        Task<Card> GetCardByIdAsync(int id);
-        Task<Card> GetCardByCardNumberAsync(string cardNumber);
-        Task<Card> CreateCardAsync(Card card);
-        Task<Card> UpdateCardAsync(Card card);
+        Task<IEnumerable<Card>> GetAsync();
+        Task<IEnumerable<Card>> GetByCardNumberAsync(string cardNumber);
+        Task<Card> GetByIdAsync(int id);
+        Task<Card> CreateAsync(Card card);
+        Task<Card> UpdateAsync(Card card);
     }
 }
