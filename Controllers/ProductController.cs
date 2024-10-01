@@ -23,7 +23,7 @@ namespace CardShop.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            var product = await _repository.GetProductsAsync();
+            var product = await _repository.GetAsync();
 
             if(product is null)
             {
@@ -37,7 +37,7 @@ namespace CardShop.Controllers
         [HttpGet("{id}", Name = "GetProductById")]
         public async Task<ActionResult<Product>> GetProductById(int id)
         {
-            var product = await _repository.GetProductByIdAsync(id);
+            var product = await _repository.GetByIdAsync(id);
 
             if (product is null)
             {
@@ -57,7 +57,7 @@ namespace CardShop.Controllers
                 return BadRequest("Invalid information detected");
             }
 
-            var newProduct = await _repository.CreateProductAsync(product);
+            var newProduct = await _repository.CreateAsync(product);
 
             return new CreatedAtRouteResult("GetProductById", new { id = newProduct.ProductId}, newProduct);
         }
@@ -73,7 +73,7 @@ namespace CardShop.Controllers
                 return BadRequest("Invalid information detected");
             }
 
-            var updatedProduct = await _repository.UpdateProductAsync(product);
+            var updatedProduct = await _repository.UpdateAsync(product);
 
             return NoContent();
         }
@@ -81,7 +81,7 @@ namespace CardShop.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteProduct(int id)
         {
-            var product = await _repository.GetProductByIdAsync(id);
+            var product = await _repository.GetByIdAsync(id);
 
             if (product is null)
             {
@@ -89,7 +89,7 @@ namespace CardShop.Controllers
                 return NotFound("Product not found");
             }
 
-            await _repository.DeleteProductAsync(id);
+            await _repository.DeleteAsync(id);
 
             return NoContent();
         }

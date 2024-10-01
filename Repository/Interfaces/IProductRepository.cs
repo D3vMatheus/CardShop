@@ -4,10 +4,10 @@ namespace CardShop.Repository.Interfaces
 {
     public interface IProductRepository
     {
-        Task<IEnumerable<Product>> GetProductsAsync();
-        Task<Product> GetProductByIdAsync(int id);
-        Task<Product> CreateProductAsync(Product product);
-        Task<Product> UpdateProductAsync(Product product);
-        Task<Product> DeleteProductAsync(int id);
+        Task<IEnumerable<Product>> GetAsync();
+        Task<Product> GetByIdAsync(int id);
+        Task<Product> CreateAsync(Product product);
+        Task<Product> UpdateAsync(Product product);
+        Task<Product> DeleteAsync(int id);
     }
 }

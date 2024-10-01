@@ -14,13 +14,13 @@ namespace CardShop.Repository.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<Category>> GetCategoriesAsync()
+        public async Task<IEnumerable<Category>> GetAsync()
         {
             return await _context.categories.Take(10).ToListAsync();
 
         }
 
-        public async Task<Category> GetCategoryByIdAsync(int id)
+        public async Task<Category> GetByIdAsync(int id)
         {
             var category = await _context.categories.FirstOrDefaultAsync(c => c.CategoryId == id);
 

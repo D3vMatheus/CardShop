@@ -39,7 +39,7 @@ namespace CardShop.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategory()
         {
-            var categories = await _repository.GetCategoriesAsync();
+            var categories = await _repository.GetAsync();
 
             if (categories is null)
             {
@@ -53,7 +53,7 @@ namespace CardShop.Controllers
         [HttpGet("{id}", Name = "GetCategoryById")]
         public async Task<ActionResult<Category>> GetCategoryById(int id) 
         {
-            var category = await _repository.GetCategoryByIdAsync(id);
+            var category = await _repository.GetByIdAsync(id);
             if (category is null)
             {
                 _logger.LogWarning($"Category {id} doesn't exist");
@@ -94,7 +94,7 @@ namespace CardShop.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteCategory(int id)
         {
-            var category = _repository.GetCategoryByIdAsync(id);
+            var category = _repository.GetByIdAsync(id);
             if (category is null)
             {
                 _logger.LogWarning($"Couldn't delete category due invalid information detected: {id} doesn't exist");

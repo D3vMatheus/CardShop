@@ -13,12 +13,12 @@ namespace CardShop.Repository.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<Product>> GetProductsAsync()
+        public async Task<IEnumerable<Product>> GetAsync()
         {
             return await _context.products.Take(10).ToListAsync();
         }
 
-        public async Task<Product> GetProductByIdAsync(int id)
+        public async Task<Product> GetByIdAsync(int id)
         {
             var product = await _context.products.FirstOrDefaultAsync(c => c.ProductId == id);
 
@@ -28,7 +28,7 @@ namespace CardShop.Repository.Services
             return product;
         }
 
-        public async Task<Product> CreateProductAsync(Product product)
+        public async Task<Product> CreateAsync(Product product)
         {
             if (product is null) 
                 throw new ArgumentNullException(nameof(product));
@@ -39,7 +39,7 @@ namespace CardShop.Repository.Services
             return product;
         }
 
-        public async Task<Product> UpdateProductAsync(Product product)
+        public async Task<Product> UpdateAsync(Product product)
         {
             if (product is null)
                 throw new ArgumentNullException(nameof(product));
@@ -50,7 +50,7 @@ namespace CardShop.Repository.Services
             return product;
         }
 
-        public async Task<Product> DeleteProductAsync(int id)
+        public async Task<Product> DeleteAsync(int id)
         {
             var product = await _context.products.FindAsync(id);
 
