@@ -2,7 +2,7 @@
 
 namespace CardShop.Repository.Interfaces
 {
-    public interface IProductRepository
+    public interface IProductRepository //: IRepository<Product>
     {
         Task<IEnumerable<Product>> GetAsync();
         Task<Product> GetByIdAsync(int id);
