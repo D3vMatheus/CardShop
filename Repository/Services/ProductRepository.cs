@@ -5,50 +5,47 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CardShop.Repository.Services
 {
-    public class ProductRepository : IProductRepository
+    public class ProductRepository : Repository<Product>, IProductRepository
     {
-        private readonly CardShopDbContext _context;
-        public ProductRepository(CardShopDbContext context)
-        {
-            _context = context;
+        public ProductRepository(CardShopDbContext context) :base(context){
         }
 
-        public async Task<IEnumerable<Product>> GetAsync()
-        {
-            return await _context.products.Take(10).ToListAsync();
-        }
+        //public async Task<IEnumerable<Product>> GetAsync()
+        //{
+        //    return await _context.products.Take(10).ToListAsync();
+        //}
 
-        public async Task<Product> GetByIdAsync(int id)
-        {
-            var product = await _context.products.FirstOrDefaultAsync(c => c.ProductId == id);
+        //public async Task<Product> GetByIdAsync(int id)
+        //{
+        //    var product = await _context.products.FirstOrDefaultAsync(c => c.ProductId == id);
 
-            if (product is null)
-                throw new ArgumentNullException(nameof(product));
+        //    if (product is null)
+        //        throw new ArgumentNullException(nameof(product));
             
-            return product;
-        }
+        //    return product;
+        //}
 
-        public async Task<Product> CreateAsync(Product product)
-        {
-            if (product is null) 
-                throw new ArgumentNullException(nameof(product));
+        //public async Task<Product> CreateAsync(Product product)
+        //{
+        //    if (product is null) 
+        //        throw new ArgumentNullException(nameof(product));
 
-            await _context.products.AddAsync(product);
-            await _context.SaveChangesAsync();
+        //    await _context.products.AddAsync(product);
+        //    await _context.SaveChangesAsync();
 
-            return product;
-        }
+        //    return product;
+        //}
 
-        public async Task<Product> UpdateAsync(Product product)
-        {
-            if (product is null)
-                throw new ArgumentNullException(nameof(product));
+        //public async Task<Product> UpdateAsync(Product product)
+        //{
+        //    if (product is null)
+        //        throw new ArgumentNullException(nameof(product));
 
-            _context.Entry(product).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+        //    _context.Entry(product).State = EntityState.Modified;
+        //    await _context.SaveChangesAsync();
 
-            return product;
-        }
+        //    return product;
+        //}
 
         public async Task<Product> DeleteAsync(int id)
         {

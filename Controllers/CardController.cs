@@ -16,11 +16,15 @@ namespace CardShop.Controllers
     [ApiController]
     public class CardController : ControllerBase
     {
-        private readonly ICardRepository _repository;
+        private readonly IRepository<Card> _repository;
+        private readonly ICardRepository _cardRepository;
         private readonly ILogger<CardController> _logger;
 
-        public CardController(ICardRepository repository, ILogger<CardController> logger)
+        public CardController(IRepository<Card> repository,
+                              ICardRepository cardRepository,
+                              ILogger<CardController> logger)
         {
+            _cardRepository = cardRepository;
             _repository = repository;
             _logger = logger;
         }
@@ -29,7 +33,7 @@ namespace CardShop.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Card>>> GetcardsAsync()
         {
-            var cards = await _repository.GetAsync();
+            var cards = await _repository.GetAllAsync();
 
             if(cards is null){
                 _logger.LogWarning("Cards doesn't exist");
@@ -42,7 +46,7 @@ namespace CardShop.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Card>> GetCardByIdAsync(int id)
         {
-            var card = await _repository.GetByIdAsync(id);
+            var card = await _repository.GetAsync(p => p.ProductId == id);
 
             if (card == null)
             {
@@ -56,7 +60,7 @@ namespace CardShop.Controllers
         [HttpGet("{number:regex(^[[A-Z]]{{2}}\\d{{1,2}}-\\d{{3}}$)}")]
         public async Task<ActionResult<IEnumerable<Card>>> GetCardByNumberAsync(string number)
         {
-            var card = await _repository.GetByCardNumberAsync(number);
+            var card = await _cardRepository.GetByCardNumberAsync(number);
 
             if (card is null)
             {
@@ -70,7 +74,7 @@ namespace CardShop.Controllers
         // PUT: api/Cards/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCardAsync(int id, Card card)
+        public async Task<ActionResult> UpdateCardAsync(int id, Card card)
         {
             if (id != card.ProductId)
             {
@@ -88,6 +92,7 @@ namespace CardShop.Controllers
         [HttpPost]
         public async Task<ActionResult<Card>> AddCardAsync(Card card)
         {
+            
             if (card is null) 
             {
                 _logger.LogWarning($"Couldn't add card due invalid information detected");

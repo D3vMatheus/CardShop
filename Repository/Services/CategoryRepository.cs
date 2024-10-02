@@ -6,29 +6,26 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CardShop.Repository.Services
 {
-    public class CategoryRepository : ICategoryRepository
+    public class CategoryRepository : Repository<Category>, ICategoryRepository
     {
-        private readonly CardShopDbContext _context;
-
-        public CategoryRepository(CardShopDbContext context) {
-            _context = context;
+        public CategoryRepository(CardShopDbContext context) :base(context){
         }
 
-        public async Task<IEnumerable<Category>> GetAsync()
-        {
-            return await _context.categories.Take(10).ToListAsync();
+        //public async Task<IEnumerable<Category>> GetAsync()
+        //{
+        //    return await _context.categories.Take(10).ToListAsync();
 
-        }
+        //}
 
-        public async Task<Category> GetByIdAsync(int id)
-        {
-            var category = await _context.categories.FirstOrDefaultAsync(c => c.CategoryId == id);
+        //public async Task<Category> GetByIdAsync(int id)
+        //{
+        //    var category = await _context.categories.FirstOrDefaultAsync(c => c.CategoryId == id);
 
-            if (category is null)
-                throw new ArgumentNullException(nameof(category));
+        //    if (category is null)
+        //        throw new ArgumentNullException(nameof(category));
 
-            return category;
-        }
+        //    return category;
+        //}
 
         public async Task<IEnumerable<Category>> GetProductsInCategoryAsync()
         {
@@ -40,27 +37,27 @@ namespace CardShop.Repository.Services
             return category;
         }
 
-        public async Task<Category> CreateAsync(Category category)
-        {
-            if(category is null)
-                throw new ArgumentNullException(nameof(category));
+        //public async Task<Category> CreateAsync(Category category)
+        //{
+        //    if(category is null)
+        //        throw new ArgumentNullException(nameof(category));
 
-            await _context.categories.AddAsync(category);
-            await _context.SaveChangesAsync();
+        //    await _context.categories.AddAsync(category);
+        //    await _context.SaveChangesAsync();
 
-            return category;
-        }
+        //    return category;
+        //}
 
-        public async Task<Category> UpdateAsync(Category category)
-        {
-            if (category is null)
-                throw new ArgumentNullException(nameof(category));
+        //public async Task<Category> UpdateAsync(Category category)
+        //{
+        //    if (category is null)
+        //        throw new ArgumentNullException(nameof(category));
 
-            _context.categories.Entry(category).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            
-            return category;
-        }
+        //    _context.categories.Entry(category).State = EntityState.Modified;
+        //    await _context.SaveChangesAsync();
+
+        //    return category;
+        //}
 
         public async Task<Category> DeleteAsync(int id)
         {

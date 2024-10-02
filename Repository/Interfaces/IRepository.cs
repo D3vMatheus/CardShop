@@ -4,9 +4,9 @@ namespace CardShop.Repository.Interfaces
 {
     public interface IRepository<T>
     {
-        Task<IEnumerable<T>> GetAll();
-        Task<T?> Get(Expression<Func<T, bool>> predicate);
-        Task<T?> Create(T entity);
-        Task<T?> Update(T entity);
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<T> GetAsync(Expression<Func<T, bool>> predicate);
+        Task<T> CreateAsync(T entity);
+        Task<T> UpdateAsync(T entity);
     }
 }

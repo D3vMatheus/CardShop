@@ -11,19 +11,23 @@ namespace CardShop.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly IProductRepository _repository;
+        private readonly IRepository<Product> _repository;
+        private readonly IProductRepository _productRepository;
         private readonly ILogger<ProductController> _logger;
 
-        public ProductController(IProductRepository repository, ILogger<ProductController> logger)
+        public ProductController(IRepository<Product> repository,
+                                 IProductRepository productRepository,
+                                 ILogger<ProductController> logger)
         {
             _repository = repository;
+            _productRepository = productRepository;
             _logger = logger;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            var product = await _repository.GetAsync();
+            var product = await _repository.GetAllAsync();
 
             if(product is null)
             {
@@ -37,7 +41,7 @@ namespace CardShop.Controllers
         [HttpGet("{id}", Name = "GetProductById")]
         public async Task<ActionResult<Product>> GetProductById(int id)
         {
-            var product = await _repository.GetByIdAsync(id);
+            var product = await _repository.GetAsync(p => p.ProductId == id);
 
             if (product is null)
             {
@@ -51,6 +55,7 @@ namespace CardShop.Controllers
         [HttpPost]
         public async Task<ActionResult> AddProduct(Product product)
         {
+            
             if (product is null)
             {
                 _logger.LogWarning($"Couldn't add product due invalid information detected");
@@ -81,7 +86,7 @@ namespace CardShop.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteProduct(int id)
         {
-            var product = await _repository.GetByIdAsync(id);
+            var product = await _repository.GetAsync(p => p.ProductId == id);
 
             if (product is null)
             {
@@ -89,7 +94,7 @@ namespace CardShop.Controllers
                 return NotFound("Product not found");
             }
 
-            await _repository.DeleteAsync(id);
+            await _productRepository.DeleteAsync(id);
 
             return NoContent();
         }
