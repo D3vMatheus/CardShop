@@ -5,18 +5,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CardShop.Repository.Services
 {
-    public class CardRepository : ICardRepository
+    public class CardRepository : Repository<Card>, ICardRepository
     {
-        private readonly CardShopDbContext _context;
         
-        public CardRepository(CardShopDbContext context) {
-            _context = context;
+        public CardRepository(CardShopDbContext context) :base(context){
         }
 
-        public async Task<IEnumerable<Card>> GetAsync()
-        {
-            return await _context.cards.Take(10).ToListAsync();
-        }
+        //public async Task<IEnumerable<Card>> GetAsync()
+        //{
+        //    return await _context.cards.Take(10).ToListAsync();
+        //}
 
         public async Task<IEnumerable<Card>> GetByCardNumberAsync(string cardNumber)
         {
@@ -28,37 +26,37 @@ namespace CardShop.Repository.Services
             return card;
         }
 
-        public async Task<Card> GetByIdAsync(int id)
-        {
-            var card = await _context.cards.FirstOrDefaultAsync(c => c.ProductId == id);
+        //public async Task<Card> GetByIdAsync(int id)
+        //{
+        //    var card = await _context.cards.FirstOrDefaultAsync(c => c.ProductId == id);
 
-            if (card is null)
-                throw new ArgumentNullException(nameof(card));
+        //    if (card is null)
+        //        throw new ArgumentNullException(nameof(card));
 
-            return card;
-        }
+        //    return card;
+        //}
 
-        public async Task<Card> CreateAsync(Card card)
-        {
-            if (card is null)
-                throw new ArgumentNullException(nameof(card));
+        //public async Task<Card> CreateAsync(Card card)
+        //{
+        //    if (card is null)
+        //        throw new ArgumentNullException(nameof(card));
 
-            await _context.cards.AddAsync(card);
-            await _context.SaveChangesAsync();
+        //    await _context.cards.AddAsync(card);
+        //    await _context.SaveChangesAsync();
 
-            return card;
-        }
+        //    return card;
+        //}
 
-        public async Task<Card> UpdateAsync(Card card)
-        {
-            if (card is null)
-                throw new ArgumentNullException(nameof(card));
+        //public async Task<Card> UpdateAsync(Card card)
+        //{
+        //    if (card is null)
+        //        throw new ArgumentNullException(nameof(card));
             
-            _context.Entry(card).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+        //    _context.Entry(card).State = EntityState.Modified;
+        //    await _context.SaveChangesAsync();
 
-            return card;
-        }
+        //    return card;
+        //}
 
         private bool CardNumberExists(string number)
         {
