@@ -39,7 +39,7 @@ namespace CardShop.Controllers
         }
 
         // GET: api/Cards/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetCardById")]
         public async Task<ActionResult<Card>> GetCardByIdAsync(int id)
         {
             var card = await _repository.GetByIdAsync(id);
@@ -96,7 +96,7 @@ namespace CardShop.Controllers
 
             var newCard = await _repository.CreateAsync(card);
 
-            return CreatedAtAction("GetCard", new { id = newCard.CardId}, newCard);
+            return new CreatedAtRouteResult("GetCardById", new { id = newCard.CardId }, newCard); 
         }
     }
 }
