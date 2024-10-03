@@ -7,7 +7,7 @@ namespace CardShop.Repository.Services
 {
     public class ProductRepository : Repository<Product>, IProductRepository
     {
-        public ProductRepository(CardShopDbContext context) :base(context){
+        public ProductRepository(CardShopDbContext context) : base(context){
         }
 
         //public async Task<IEnumerable<Product>> GetAsync()

@@ -11,15 +11,15 @@ namespace CardShop.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly IRepository<Product> _repository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IProductRepository _productRepository;
         private readonly ILogger<ProductController> _logger;
 
-        public ProductController(IRepository<Product> repository,
+        public ProductController(IUnitOfWork unitOfWork,
                                  IProductRepository productRepository,
                                  ILogger<ProductController> logger)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
             _productRepository = productRepository;
             _logger = logger;
         }
@@ -27,7 +27,7 @@ namespace CardShop.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            var product = await _repository.GetAllAsync();
+            var product = await _unitOfWork.ProductRepository.GetAllAsync();
 
             if(product is null)
             {
@@ -41,7 +41,7 @@ namespace CardShop.Controllers
         [HttpGet("{id}", Name = "GetProductById")]
         public async Task<ActionResult<Product>> GetProductById(int id)
         {
-            var product = await _repository.GetAsync(p => p.ProductId == id);
+            var product = await _unitOfWork.ProductRepository.GetAsync(p => p.ProductId == id);
 
             if (product is null)
             {
@@ -62,7 +62,8 @@ namespace CardShop.Controllers
                 return BadRequest("Invalid information detected");
             }
 
-            var newProduct = await _repository.CreateAsync(product);
+            var newProduct = await _unitOfWork.ProductRepository.CreateAsync(product);
+            await _unitOfWork.CommitAsync();
 
             return new CreatedAtRouteResult("GetProductById", new { id = newProduct.ProductId}, newProduct);
         }
@@ -78,7 +79,8 @@ namespace CardShop.Controllers
                 return BadRequest("Invalid information detected");
             }
 
-            var updatedProduct = await _repository.UpdateAsync(product);
+            var updatedProduct = await _unitOfWork.ProductRepository.UpdateAsync(product);
+            await _unitOfWork.CommitAsync();
 
             return NoContent();
         }
@@ -86,7 +88,7 @@ namespace CardShop.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteProduct(int id)
         {
-            var product = await _repository.GetAsync(p => p.ProductId == id);
+            var product = await _unitOfWork.ProductRepository.GetAsync(p => p.ProductId == id);
 
             if (product is null)
             {

@@ -22,26 +22,31 @@ namespace CardShop.Repository.Services
         {
             get
             {
-                return _productRepo = ProductRepository ?? new ProductRepository(_context);
+                return _productRepo = _productRepo ?? new ProductRepository(_context);
             }
         }
         public ICategoryRepository CategoryRepository
         {
             get
             {
-                return _categoryRepo = CategoryRepository ?? new CategoryRepository(_context);
+                return _categoryRepo = _categoryRepo ?? new CategoryRepository(_context);
             }
         }
         public ICardRepository CardRepository
         {
             get
             {
-                return _cardRepo= CardRepository ?? new CardRepository(_context);
+                return _cardRepo = _cardRepo ?? new CardRepository(_context);
             }
         }
         public async Task CommitAsync()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }

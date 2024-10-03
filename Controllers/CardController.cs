@@ -16,16 +16,13 @@ namespace CardShop.Controllers
     [ApiController]
     public class CardController : ControllerBase
     {
-        private readonly IRepository<Card> _repository;
-        private readonly ICardRepository _cardRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<CardController> _logger;
 
-        public CardController(IRepository<Card> repository,
-                              ICardRepository cardRepository,
+        public CardController(IUnitOfWork unitOfWork,
                               ILogger<CardController> logger)
         {
-            _cardRepository = cardRepository;
-            _repository = repository;
+            _unitOfWork = unitOfWork;
             _logger = logger;
         }
 
@@ -33,7 +30,7 @@ namespace CardShop.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Card>>> GetcardsAsync()
         {
-            var cards = await _repository.GetAllAsync();
+            var cards = await _unitOfWork.CardRepository.GetAllAsync();
 
             if(cards is null){
                 _logger.LogWarning("Cards doesn't exist");
@@ -46,7 +43,7 @@ namespace CardShop.Controllers
         [HttpGet("{id}", Name = "GetCardById")]
         public async Task<ActionResult<Card>> GetCardByIdAsync(int id)
         {
-            var card = await _repository.GetAsync(p => p.ProductId == id);
+            var card = await _unitOfWork.CardRepository.GetAsync(p => p.ProductId == id);
 
             if (card == null)
             {
@@ -60,7 +57,7 @@ namespace CardShop.Controllers
         [HttpGet("{number:regex(^[[A-Z]]{{2}}\\d{{1,2}}-\\d{{3}}$)}")]
         public async Task<ActionResult<IEnumerable<Card>>> GetCardByNumberAsync(string number)
         {
-            var card = await _cardRepository.GetByCardNumberAsync(number);
+            var card = await _unitOfWork.CardRepository.GetByCardNumberAsync(number);
 
             if (card is null)
             {
@@ -82,7 +79,8 @@ namespace CardShop.Controllers
                 return BadRequest("Invalid information detected");
             }
             
-            await _repository.UpdateAsync(card);
+            await _unitOfWork.CardRepository.UpdateAsync(card);
+            await _unitOfWork.CommitAsync();
 
             return NoContent();
         }
@@ -99,7 +97,8 @@ namespace CardShop.Controllers
                 return BadRequest("Invalid information detected");
             }
 
-            var newCard = await _repository.CreateAsync(card);
+            var newCard = await _unitOfWork.CardRepository.CreateAsync(card);
+            await _unitOfWork.CommitAsync();
 
             return new CreatedAtRouteResult("GetCardById", new { id = newCard.CardId }, newCard); 
         }
