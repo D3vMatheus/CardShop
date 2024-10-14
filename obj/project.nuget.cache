@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "7ZX542gg0ro=",
+  "dgSpecHash": "qlYB9HMFHpg=",
   "success": true,
   "projectFilePath": "C:\\Users\\mathe\\source\\repos\\CardShop\\CardShop\\CardShop.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\mathe\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\mathe\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
     "C:\\Users\\mathe\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\mathe\\.nuget\\packages\\humanizer.core.af\\2.14.1\\humanizer.core.af.2.14.1.nupkg.sha512",

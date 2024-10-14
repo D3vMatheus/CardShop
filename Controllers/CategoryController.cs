@@ -1,4 +1,6 @@
-﻿using CardShop.Context;
+﻿using AutoMapper;
+using CardShop.Context;
+using CardShop.DTOs;
 using CardShop.Filters;
 using CardShop.Model;
 using CardShop.Repository;
@@ -17,19 +19,22 @@ namespace CardShop.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IMapper _mapper;
         private readonly ILogger<CategoryController> _logger;
 
         public CategoryController(IUnitOfWork unitOfWork,
                                   ICategoryRepository categoryRepository,
+                                  IMapper mapper,
                                   ILogger<CategoryController> logger) 
         {
             _unitOfWork = unitOfWork;
             _categoryRepository = categoryRepository;
+            _mapper = mapper;
             _logger = logger;
         }
 
         [HttpGet("CategoryProducts")]
-        public  async Task<ActionResult<IEnumerable<Category>>> GetProductsInCategory()
+        public  async Task<ActionResult<IEnumerable<CategoryDTO>>> GetProductsInCategory()
         {
             var category = await _unitOfWork.CategoryRepository.GetProductsInCategoryAsync();
 
@@ -39,11 +44,13 @@ namespace CardShop.Controllers
                 return NotFound("Category not found");
             }
 
-            return Ok(category);
+            var categoryDto = _mapper.Map<IEnumerable<CategoryDTO>>(category);
+            
+            return Ok(categoryDto);
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategory()
+        public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetCategory()
         {
             var categories = await _unitOfWork.CategoryRepository.GetAllAsync();
 
@@ -53,11 +60,13 @@ namespace CardShop.Controllers
                 return NotFound("Category not found");
             }
 
-            return Ok(categories);
+            var categoryDto = _mapper.Map<IEnumerable<CategoryDTO>>(categories);
+
+            return Ok(categoryDto);
         }
 
         [HttpGet("{id}", Name = "GetCategoryById")]
-        public async Task<ActionResult<Category>> GetCategoryById(int id) 
+        public async Task<ActionResult<CategoryDTO>> GetCategoryById(int id) 
         {
             var category = await _unitOfWork.CategoryRepository.GetAsync(c => c.CategoryId == id);
             
@@ -67,32 +76,41 @@ namespace CardShop.Controllers
                 return NotFound("Category not found");
             }
 
-            return Ok(category);
+            var categoryDto = _mapper.Map<CategoryDTO>(category);
+
+            return Ok(categoryDto);
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddCategory(Category category)
+        public async Task<ActionResult<CategoryDTO>> AddCategory(CategoryDTO categoryDto)
         {
-            if (category is null)
+            if (categoryDto is null)
             {
                 _logger.LogWarning($"Couldn't add category due invalid information detected");
                 return BadRequest("Invalid information detected");
             }
 
+            var category = _mapper.Map<Category>(categoryDto);
+
             var newCategory = await _unitOfWork.CategoryRepository.CreateAsync(category);
+            
             await _unitOfWork.CommitAsync();
 
-            return new CreatedAtRouteResult("GetCategoryById", new { id = newCategory.CategoryId}, newCategory);
+            var newCategoryDto = _mapper.Map<CategoryDTO>(category);
+
+            return new CreatedAtRouteResult("GetCategoryById", new { id = newCategoryDto.CategoryId }, newCategoryDto);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateCategory(int id, Category category)
+        public async Task<ActionResult> UpdateCategory(int id, CategoryDTO categoryDto)
         {
-            if (id != category.CategoryId)
+            if (id != categoryDto.CategoryId)
             {
                 _logger.LogWarning($"Couldn't update category due invalid information detected: {id} doesn't exist");
                 return NotFound("Category not found");
             }
+
+            var category = _mapper.Map<Category>(categoryDto);
 
             await _unitOfWork.CategoryRepository.UpdateAsync(category);
             await _unitOfWork.CommitAsync();
