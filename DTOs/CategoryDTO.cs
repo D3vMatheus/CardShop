@@ -14,5 +14,7 @@ namespace CardShop.DTOs
 
         [Required]
         public string? ImageUrl { get; set; }
+        public ICollection<Product>? Products { get; set; }
+
     }
 }

@@ -7,6 +7,8 @@ namespace CardShop.DTOs.Mappings
     {
         public ProductDTOMappingProfile() {
             CreateMap<Product, ProductDTO>().ReverseMap();
+            CreateMap<Product, ProductDTOUpdateRequest>().ReverseMap();
+            CreateMap<Product, ProductDTOUpdateResponse>().ReverseMap();
         }
     }
 }

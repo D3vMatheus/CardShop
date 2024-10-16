@@ -4,6 +4,7 @@ using CardShop.DTOs;
 using CardShop.Model;
 using CardShop.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -100,6 +101,34 @@ namespace CardShop.Controllers
 
             return NoContent();
         }
+
+        [HttpPatch("{id}/InStock")]
+        public async Task<ActionResult<ProductDTOUpdateResponse>> PatchProduct(int id,
+                            JsonPatchDocument<ProductDTOUpdateRequest> patchProductDto)
+        {
+            if (patchProductDto is null || id <=0)
+                return BadRequest();
+
+            var product = await _unitOfWork.ProductRepository.GetAsync(p => p.ProductId == id);
+
+            if (product is null)
+                return NotFound();
+
+            var productUpdateRequest = _mapper.Map<ProductDTOUpdateRequest>(product);
+
+            patchProductDto.ApplyTo(productUpdateRequest, ModelState);
+            
+            if(!ModelState.IsValid || TryValidateModel(productUpdateRequest))
+                return BadRequest(ModelState);
+
+            await _unitOfWork.ProductRepository.UpdateAsync(product);
+            await _unitOfWork.CommitAsync();
+            
+            var productUpdateResponse = _mapper.Map<ProductDTOUpdateResponse>(product);
+            
+            return Ok(productUpdateResponse);
+        }
+
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteProduct(int id)
