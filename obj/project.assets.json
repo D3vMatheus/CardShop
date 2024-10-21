@@ -1751,13 +1751,13 @@
           }
         }
       },
-      "Npgsql.EntityFrameworkCore.PostgreSQL/8.0.8": {
+      "Npgsql.EntityFrameworkCore.PostgreSQL/8.0.10": {
         "type": "package",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore": "8.0.8",
-          "Microsoft.EntityFrameworkCore.Abstractions": "8.0.8",
-          "Microsoft.EntityFrameworkCore.Relational": "8.0.8",
-          "Npgsql": "8.0.4"
+          "Microsoft.EntityFrameworkCore": "8.0.10",
+          "Microsoft.EntityFrameworkCore.Abstractions": "8.0.10",
+          "Microsoft.EntityFrameworkCore.Relational": "8.0.10",
+          "Npgsql": "8.0.5"
         },
         "compile": {
           "lib/net8.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll": {
@@ -5926,17 +5926,17 @@
         "postgresql.png"
       ]
     },
-    "Npgsql.EntityFrameworkCore.PostgreSQL/8.0.8": {
-      "sha512": "D5WWJZJTgZYUmGv66BARXbTlinp2a5f5RueJqGYoHuWJw02J0i2va/RA+8N4A5hLORK5YKMRqXhFWtKsZdrksw==",
+    "Npgsql.EntityFrameworkCore.PostgreSQL/8.0.10": {
+      "sha512": "gFPl9Dmxih7Yi4tZ3bITzZFzbxFMBx04gqTqcjoL2r5VEW+O2TA5UVw/wm/XW26NAJ7sg59Je0+9QrwiZt6MPQ==",
       "type": "package",
-      "path": "npgsql.entityframeworkcore.postgresql/8.0.8",
+      "path": "npgsql.entityframeworkcore.postgresql/8.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "README.md",
         "lib/net8.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll",
         "lib/net8.0/Npgsql.EntityFrameworkCore.PostgreSQL.xml",
-        "npgsql.entityframeworkcore.postgresql.8.0.8.nupkg.sha512",
+        "npgsql.entityframeworkcore.postgresql.8.0.10.nupkg.sha512",
         "npgsql.entityframeworkcore.postgresql.nuspec",
         "postgresql.png"
       ]
@@ -6988,7 +6988,6 @@
   "projectFileDependencyGroups": {
     "net8.0": [
       "AutoMapper >= 13.0.1",
-      "Microsoft.AspNetCore.JsonPatch >= 8.0.10",
       "Microsoft.AspNetCore.Mvc.NewtonsoftJson >= 8.0.10",
       "Microsoft.EntityFrameworkCore >= 8.0.10",
       "Microsoft.EntityFrameworkCore.Design >= 8.0.10",
@@ -6996,7 +6995,7 @@
       "Microsoft.VisualStudio.Azure.Containers.Tools.Targets >= 1.21.0",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 8.0.6",
       "Npgsql >= 8.0.5",
-      "Npgsql.EntityFrameworkCore.PostgreSQL >= 8.0.8",
+      "Npgsql.EntityFrameworkCore.PostgreSQL >= 8.0.10",
       "Swashbuckle.AspNetCore >= 6.9.0"
     ]
   },
@@ -7054,10 +7053,6 @@
             "target": "Package",
             "version": "[13.0.1, )"
           },
-          "Microsoft.AspNetCore.JsonPatch": {
-            "target": "Package",
-            "version": "[8.0.10, )"
-          },
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
             "target": "Package",
             "version": "[8.0.10, )"
@@ -7092,7 +7087,7 @@
           },
           "Npgsql.EntityFrameworkCore.PostgreSQL": {
             "target": "Package",
-            "version": "[8.0.8, )"
+            "version": "[8.0.10, )"
           },
           "Swashbuckle.AspNetCore": {
             "target": "Package",
