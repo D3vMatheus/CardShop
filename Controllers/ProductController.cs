@@ -2,6 +2,7 @@
 using CardShop.Context;
 using CardShop.DTOs;
 using CardShop.Model;
+using CardShop.Pagination;
 using CardShop.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
@@ -59,6 +60,14 @@ namespace CardShop.Controllers
             var productDto = _mapper.Map<ProductDTO>(product);
 
             return Ok(productDto);
+        }
+        [HttpGet("pagination")]
+        public async Task<ActionResult<ProductDTO>> Get([FromQuery] ProductsParameters productsParameters)
+        {
+            var products = await _unitOfWork.ProductRepository.GetProducts(productsParameters);
+            var productsDto = _mapper.Map<ProductDTO>(products);
+
+            return Ok(productsDto);
         }
 
         [HttpPost]

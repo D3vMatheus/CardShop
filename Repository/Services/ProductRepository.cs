@@ -1,5 +1,6 @@
 ﻿using CardShop.Context;
 using CardShop.Model;
+using CardShop.Pagination;
 using CardShop.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -58,6 +59,15 @@ namespace CardShop.Repository.Services
             await _context.SaveChangesAsync();
             
             return product;
+        }
+
+        public async Task<IEnumerable<Product>> GetProducts(ProductsParameters productsParams)
+        {
+            //Change repository async method to sync method
+            return await GetAllAsync()
+                .OrderBy(p => p.Name)
+                .Skip((productsParams.pageNumber -1) * productsParams.PageSize)
+                .Take(productsParams.PageSize).ToListAsync();
         }
     }
 }
